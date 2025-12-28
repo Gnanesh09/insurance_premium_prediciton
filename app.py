@@ -5,6 +5,7 @@ import pandas as pd
 
 from fastapi.responses import JSONResponse
 
+from model.predict import predict_output
 from schema.user_input import UserInput
 
 MODEL_VERSION = '1.0.0'
@@ -31,7 +32,7 @@ def health_check():
     }
 @app.post("/predict")
 def predict_premium(data:UserInput):
-    input_df = pd.DataFrame([{
+    user_input = {
         "bmi": data.bmi,
         "age_group": data.age_group,
         "lifestyle_risk": data.lifestyle_risk,
@@ -40,9 +41,9 @@ def predict_premium(data:UserInput):
         "occupation": data.occupation,
 
 
-    }])
+    }
 
-    prediction = model.predict(input_df)[0]
+    prediction = predict_output(user_input)
     return JSONResponse(status_code=200, content={'predicted_category': prediction})
 
 
