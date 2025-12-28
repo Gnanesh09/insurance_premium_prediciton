@@ -6,6 +6,7 @@ import pandas as pd
 
 from fastapi.responses import JSONResponse
 
+MODEL_VERSION = '1.0.0'
 
 tier_1_cities = ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"]
 tier_2_cities = [
@@ -69,6 +70,17 @@ class UserInput(BaseModel):
             return 3
 
 
+@app.get("/")
+def home():
+    return {"message": "insurance premium prediction api"}
+
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "OK",
+        "version": MODEL_VERSION
+    }
 @app.post("/predict")
 def predict_premium(data:UserInput):
     input_df = pd.DataFrame([{
